@@ -125,7 +125,7 @@ public class MTDispatcherTest {
             public boolean valueIsCompatibleWith(Thread value) {
                 return false;
             }
-        }, "ABC", null);
+        }, "ABC", null, true);
 
         try {
             instance.getCurrentData();
@@ -140,7 +140,7 @@ public class MTDispatcherTest {
     @Test
     public void testDispatcherMatchingOk() {
         MTDispatcher<String> instance = new MTDispatcher<String>();
-        instance.register(ThreadChecker.anyThread, "a thread", null);
+        instance.register(ThreadChecker.anyThread, "a thread", null, true);
         assertEquals("a thread", instance.getCurrentData());
         // We should now get the same data, since the thread is registered.
         assertEquals("a thread", instance.getCurrentData());
@@ -169,8 +169,8 @@ public class MTDispatcherTest {
         MatchingHandler[] handlers = {
             new MatchingHandler(), new MatchingHandler()
         };
-        instance.register(ThreadChecker.anyThread, "me", handlers[0]);
-        instance.register(ThreadChecker.anyThread, "the other", handlers[1]);
+        instance.register(ThreadChecker.anyThread, "me", handlers[0], true);
+        instance.register(ThreadChecker.anyThread, "the other", handlers[1], true);
         other.start();
 
         for (int i = 0; i < TLOOP_LEN; i++) {
@@ -207,8 +207,8 @@ public class MTDispatcherTest {
             new MatchingHandler(), new MatchingHandler()
         };
         instance.register(ThreadChecker.equalTo(Thread.currentThread()), "me",
-          handlers[0]);
-        instance.register(ThreadChecker.equalTo(other), "the other", handlers[1]);
+          handlers[0], true);
+        instance.register(ThreadChecker.equalTo(other), "the other", handlers[1], true);
         other.start();
 
         for (int i = 0; i < TLOOP_LEN; i++) {

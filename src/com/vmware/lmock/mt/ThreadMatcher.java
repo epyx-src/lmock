@@ -41,6 +41,7 @@ class ThreadMatcher<T> {
         private final ThreadChecker checker;
         private final T data;
         private final ThreadMatcherNotificationHandler callback;
+        private final boolean useOnlyOnce;
 
         /**
          * Creates a new pair of data.
@@ -52,13 +53,14 @@ class ThreadMatcher<T> {
          * @param callback
          *            called back when the matching thread is found
          *            (<code>null</code> if none)
-         */
+         */        
         MatcherData(ThreadChecker checker, T data,
-          ThreadMatcherNotificationHandler callback) {
-            this.checker = checker;
-            this.data = data;
-            this.callback = callback;
-        }
+            ThreadMatcherNotificationHandler callback, boolean useOnlyOnce) {
+              this.checker = checker;
+              this.data = data;
+              this.callback = callback;
+              this.useOnlyOnce = useOnlyOnce;
+          }
 
         /** @return The checker enclosed by this. */
         ThreadChecker getChecker() {
@@ -97,9 +99,9 @@ class ThreadMatcher<T> {
      *            found.
      */
     synchronized void registerNewChecker(ThreadChecker checker, T data,
-      ThreadMatcherNotificationHandler callback) {
-        checkers.add(new MatcherData(checker, data, callback));
-    }
+        ThreadMatcherNotificationHandler callback, boolean useOnlyOnce) {
+          checkers.add(new MatcherData(checker, data, callback, useOnlyOnce));
+      }
 
     /**
      * Searches for a thread recognized by one registered checker.
@@ -120,7 +122,9 @@ class ThreadMatcher<T> {
         while (iterator.hasNext()) {
             MatcherData data = iterator.next();
             if (data.getChecker().valueIsCompatibleWith(thread)) {
-                iterator.remove();
+                if (data.useOnlyOnce) {
+                    iterator.remove();
+                }
                 data.callbackWhenThreadFound(thread);
                 return data.getData();
             }

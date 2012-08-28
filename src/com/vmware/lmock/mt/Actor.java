@@ -71,6 +71,8 @@ public final class Actor implements HasActorClauses, ThreadMatcherNotificationHa
      * none.
      */
     private Throwable lastException;
+    
+    private boolean useOnlyInOneThread = true;
 
     /**
      * Creates a new actor.
@@ -238,5 +240,13 @@ public final class Actor implements HasActorClauses, ThreadMatcherNotificationHa
     @Override
     public String toString() {
         return "Actor$" + String.valueOf(uid);
+    }
+
+    public boolean useOnlyInOneThread() {
+        return useOnlyInOneThread;
+    }
+    
+    public void setUseOnlyInOneThread(boolean useOnlyInOneThread) {
+        this.useOnlyInOneThread = useOnlyInOneThread;
     }
 }

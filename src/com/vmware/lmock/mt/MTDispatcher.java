@@ -52,9 +52,9 @@ public class MTDispatcher<T> {
      *            found.
      */
     public synchronized void register(ThreadChecker checker, T data,
-      ThreadMatcherNotificationHandler callback) {
-        matcher.registerNewChecker(checker, data, callback);
-    }
+        ThreadMatcherNotificationHandler callback, boolean useOnlyOnce) {
+          matcher.registerNewChecker(checker, data, callback, useOnlyOnce);
+      }
 
     /**
      * Registers a set of data associated with threads following a known
@@ -96,7 +96,7 @@ public class MTDispatcher<T> {
      */
     public synchronized void registerSequence(T... data) {
         for (T currentData : data) {
-            register(ThreadChecker.anyThread, currentData, null);
+            register(ThreadChecker.anyThread, currentData, null, true);
         }
     }
 

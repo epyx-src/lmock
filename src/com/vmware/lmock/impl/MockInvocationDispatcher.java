@@ -254,7 +254,7 @@ class MockInvocationDispatcher extends MTDispatcher<MockInvocationDispatcher.Ite
             // The actor will keep track of the invoking thread when found.
             Item item = new Item(actor);
             item.setProcessor(processor);
-            register(actor.getChecker(), item, actor);
+            register(actor.getChecker(), item, actor, actor.useOnlyInOneThread());
             actor.willListenToUpdates(this, item);
         }
     }
